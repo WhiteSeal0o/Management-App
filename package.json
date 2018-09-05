@@ -9,6 +9,8 @@
     "dev-client": "cross-env NODE_ENV=development webpack-dev-server --port 3000",
     "prod-client": "cross-env NODE_ENV=development webpack-dev-server --port 3000 --open --hot",
     "dev-server": "nodemon server",
+    "prod-server": "node server",
+    "start-db": "net start MongoDB",
     "dev": "npm-run-all --parallel dev-client dev-server",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
