@@ -36,7 +36,7 @@
         <input id="absent" type="text" v-model="dailyForm.dailyStaff.absent">
 
         <br><br>
-        <button disabled @click.prevent="InsertDailyForm" id="submit-btn" type="submit">Insert / Update</button>
+        <div class="submit-button" disabled @click.prevent="InsertDailyForm" id="submit-btn"><p>Insert / Update</p></div>
     </form>
     <h4>{{ message }}</h4>
   </div>

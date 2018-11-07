@@ -13,11 +13,11 @@
       <br>
       
       <input id="isLyzon" type="checkbox" v-model="project.isLyzon">
-      <label for="isLyzon">This Is Lyzon Project</label>
+      <div class="label">Lyzon Project</div>
       <br>
 
-      <button @click="InsertProject" disabled id="submit-btn" type="submit">Insert</button>
-      <button @click="DeleteProject" disabled id="delete-btn" type="submit">Delete</button>
+      <div class="submit-button" @click="InsertProject" disabled id="submit-btn" type="submit"><p>Insert</p> </div>
+      <div class="submit-button" @click="DeleteProject" disabled id="delete-btn" type="submit"><p>Delete</p></div>
     </form>
     <h4>{{ message }}</h4>
   </div>
@@ -28,6 +28,12 @@ export default {
   components: {
   },
   props: ['projects'],
+  mounted: function () {
+    document.querySelector('input#isLyzon + .label').addEventListener('click', function () {
+      this.classList.toggle('selected')
+      document.querySelector('input#isLyzon').click()
+    })
+  },
   methods: {
     InsertProject: function () {
       var thisVue = this
@@ -67,5 +73,32 @@ export default {
 </script>
 
 <style scoped>
-
+input#isLyzon {
+  /* display: none; */
+  opacity: 0;
+}
+input#isLyzon + .label {
+  padding: 0.5%;
+  width: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 2;
+  background: rgba(53, 53, 53, 0.6);
+  color: rgb(204, 184, 159);
+  cursor: pointer;
+  border: rgba(204, 184, 159, 0) solid 3px;
+  transition: all 0.2s linear;
+}
+input#isLyzon + .label.selected,
+input#isLyzon + .label:hover {
+  border: rgba(204, 184, 159, 1) solid 3px;
+}
+input#isLyzon + .label.selected {
+  color: aliceblue;
+  background: rgba(53, 53, 53, 0.82);
+}
+.label label {
+  cursor: pointer;
+  z-index: -1;
+}
 </style>

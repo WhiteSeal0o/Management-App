@@ -70,7 +70,9 @@ export default {
       }).then( () => {
         if (thisVue.dailyForms.length == 0) {
           thisVue.notFoundMsg = 'No result found!'
-        } 
+        } else {
+          thisVue.notFoundMsg = ''
+        }
       })
 
       console.log(this.selectedId)

@@ -7,21 +7,24 @@
       </div>
     </div>
     <h3>Insert Staff</h3>
-    <form action="" @submit.prevent="InsertStaff">
+    <form action="" @submit.prevent>
       <label for="staff-id">Staff ID</label>
       <input @keyup="EnableSubmition" id="staff-id" type="text" v-model="staff.id">
       <label for="name"> Name:</label>
       <input id="name" type="text" v-model="staff.name">
       <br>
-      <label for="projectss"> Projects:</label>
-      <div id="projectss">
+      <label for="projects"> Projects:</label>
+      <div id="projects">
         <template v-for="project in projects">
           <label :for="project.name"> {{ project.name }} </label>
           <input :id="project.name" :value="project.name" type="checkbox" v-model="selectedProjects">
         </template>
       </div>
-      <div class="submit-button" disabled id="submit-btn" type="submit">
+      <div class="submit-button" @click="InsertStaff" disabled id="submit-btn">
         <p>Insert/Update</p>
+      </div>
+      <div class="submit-button" @click="DeleteProject" disabled id="delete-btn">
+        <p>Delete</p>
       </div>
     </form>
     <h4>{{ message }}</h4>
@@ -33,9 +36,17 @@ export default {
   components: {
   },
   props: ['projects','allStaff'],
+  mounted: function () {
+    var thisVue = this;
+
+    thisVue.$nextTick(function () {
+      thisVue.toggleProjectProcessing()
+    })
+  },
   methods: {
     InsertStaff: function () {
       var thisVue = this
+
       thisVue.staff.projects = this.projects.filter( pr => thisVue.selectedProjects.includes(pr.name))
       thisVue.$http.post('/api/staff',thisVue.staff)
       .then( res => {
@@ -45,8 +56,24 @@ export default {
         thisVue.message = `Successfully insert (update) ${thisVue.staff.id}`
       })
     },
+    DeleteProject: function () {
+      var thisVue = this
+
+      thisVue.$http.delete('api/staff',{body: thisVue.staff}).then( res => {
+        this.message = `Deleted ${thisVue.staff.name} - ${thisVue.staff.id}`
+        thisVue.$emit('delete-staff')
+      })
+    },
     EnableSubmition: function () {
       document.getElementById('submit-btn').disabled = false
+    },
+    toggleProjectProcessing: function () {
+      document.querySelectorAll('#projects label').forEach(element => {
+        console.log(document.getElementById('projects'));
+        element.addEventListener('click', function () {
+          this.classList.toggle("selected");
+        })
+      })
     }
   },
   data () {
@@ -65,46 +92,31 @@ export default {
 </script>
 
 <style scoped>
-/*====== Search Button  =====*/
-.submit-button {
-  font-family: 'Indie Flower', sans-serif;
-  font-size: 17px;
-  background: rgba(87, 45, 20, 0.685);
-  color: rgb(204, 184, 159);
-  height: 6vh;
-  width: 7vw;
-  position: relative;
+#projects {
   display: flex;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 50px;
-  cursor: pointer;
+  flex-flow: row wrap;
   justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  box-shadow: 1px 10px 7px rgba(87, 45, 20, 0.438);
-  overflow: hidden;
-  will-change: transform;
-  transition: all 0.3s ease-out;
+  align-items: stretch;
 }
-.submit-button p {
-  z-index: 2;
+#projects input {
+  display: none;
 }
-.submit-button:hover {
-  transform: scale(0.97)
+#projects label {
+  padding: 1%;
+  margin: 1%;
+  background: rgba(53, 53, 53, 0.6);
+  flex-basis: 4%;
+  color: rgb(204, 184, 159);
+  cursor: pointer;
+  border: rgba(204, 184, 159, 0) solid 3px;
+  transition: all 0.2s linear;
 }
-
-.submit-button::before {
-  position: absolute;
-  height: 200%;
-  width: 200%;
-  background: rgba(87, 45, 20, 0.685);
-  content: '';
-  transform: translate(100%,-100%);
-  transition: all 0.4s ease-out;
-  border-radius: 100%;
+#projects label.selected,
+#projects label:hover {
+  border: rgba(204, 184, 159, 1) solid 3px;
 }
-.submit-button:hover::before {
-  transform: translate(0);
+#projects label.selected {
+  color: aliceblue;
+  background: rgba(53, 53, 53, 0.82);
 }
 </style>
