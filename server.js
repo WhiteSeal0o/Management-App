@@ -21,7 +21,8 @@ app.get('/',function (req, res) {
     var readSteam = fs.createReadStream(__dirname + '/index.html','utf8')
     readSteam.pipe(res)
 })
+serverArgs = process.argv.slice(2);
 
-app.listen(8080, function () {
-    console.log('Now listening at port 8080')
+app.listen(serverArgs[0], function () {
+    console.log(`Now listening at port ${serverArgs[0]}`)
 })
